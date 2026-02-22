@@ -1,2 +1,2 @@
-# TurboDistributions
- A Julia package for wrapping Distributions with Float32 parameters and return values
+# DistributionsF32
+ A Julia package for Float32 probability distributions, extending Distributions.jl

@@ -1,4 +1,4 @@
-name = "TurboDistributions"
+name = "DistributionsF32"
 uuid = "11f614af-4a9d-4a5e-b76a-60ba70088fe6"
 authors = ["Samuel Brand"]
 version = "0.1.0"
