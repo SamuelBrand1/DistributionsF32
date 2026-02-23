@@ -66,20 +66,22 @@ Distributions.std(d::NormalF32) = d.σ
 Distributions.skewness(d::NormalF32) = zero(Float32)
 Distributions.kurtosis(d::NormalF32) = zero(Float32)
 
-Distributions.entropy(d::NormalF32) = (log2π_f32 + 1.0f0) / 2.0f0 + log(d.σ)
+function Distributions.entropy(d::NormalF32{T}) where {T}
+    return (T(log2π_f32) + one(T)) / T(2) + log(d.σ)
+end
 
 #### Evaluation
 
-function Distributions.logpdf(d::NormalF32, x::Real)
+function Distributions.logpdf(d::NormalF32{T}, x::Real) where {T}
     z = (x - d.μ) / d.σ
-    return -(z^2 + log2π_f32) / 2.0f0 - log(d.σ)
+    return -(z^2 + T(log2π_f32)) / T(2) - log(d.σ)
 end
 
 Distributions.pdf(d::NormalF32, x::Real) = exp(logpdf(d, x))
 
-function Distributions.cdf(d::NormalF32, x::Real)
-    z = (x - d.μ) / (d.σ * Float32(√2))
-    return erfc(-z) / 2.0f0
+function Distributions.cdf(d::NormalF32{T}, x::Real) where {T}
+    z = (x - d.μ) / (d.σ * T(√2))
+    return erfc(-z) / T(2)
 end
 
 function Distributions.logcdf(d::NormalF32, x::Real)
