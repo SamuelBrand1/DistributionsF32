@@ -5,9 +5,11 @@ version = "0.1.0"
 
 [deps]
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+LogExpFunctions = "2ab3a3ac-af41-5b50-aa03-7779005ae688"
 Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
 SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
 
 [compat]
 Distributions = "0.25.117"
+LogExpFunctions = "0.3.29"
 SpecialFunctions = "2"
