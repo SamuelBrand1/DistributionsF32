@@ -113,11 +113,27 @@ end
     @test d4.σ === 2.0f0
 end
 
-@testitem "NormalF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup = [DiffTests_logpdf] begin
-    using Distributions
-
+@testitem "NormalF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup =
+    [DiffBackends] begin
     # Analytical gradients for N(μ=0, σ=1) at x=1.5:
     #   ∂/∂μ logpdf = (x - μ) / σ² = 1.5
     #   ∂/∂σ logpdf = ((x - μ)² - σ²) / σ³ = (2.25 - 1) / 1 = 1.25
-    test_logpdf_gradient(NormalF32, [0.0, 1.0], 1.5f0, [1.5, 1.25])
+    # test_logpdf_gradient(NormalF32, [0.0, 1.0], 1.5f0, [1.5, 1.25])
+
+    xv = [0.0f0, 1.0f0]
+    g = [1.5f0, 1.25f0]
+    contexts = (Constant(NormalF32), Constant(1.5f0))
+    prep_args = (; x = xv, contexts = contexts)
+    scenarios = [
+        Scenario{:gradient, :out}(
+            logpdf_dist,
+            xv,
+            contexts...;
+            res1 = g,
+            prep_args,
+            name = "logpdf grad NormalF32 parameters",
+        ),
+    ]
+
+    test_differentiation(backends, scenarios; correctness = true, detailed = true)
 end
