@@ -1,32 +1,24 @@
-@testsnippet DiffTests_logpdf begin
-    using Distributions, DifferentiationInterface
+@testsnippet DiffBackends begin
+    using Chairmarks
+    using Distributions, DifferentiationInterface, DifferentiationInterfaceTest
+    using Enzyme: Enzyme, Reverse, Forward
     using ForwardDiff: ForwardDiff
-    using ReverseDiff: ReverseDiff
     using Mooncake: Mooncake
+    using PolyesterForwardDiff: PolyesterForwardDiff
+    using ReverseDiff: ReverseDiff
     using Zygote: Zygote
 
-    function test_logpdf_gradient(d, p, x_fixed, expected_grad)
-        f(p) = logpdf(d(p...), x_fixed)
+    # Define the backends for testing
+    backends = [
+        AutoEnzyme(; mode = Reverse),
+        AutoEnzyme(; mode = Forward),
+        AutoForwardDiff(),
+        AutoMooncake(; config = nothing),
+        AutoPolyesterForwardDiff(),
+        AutoReverseDiff(),
+        AutoZygote(),
+    ]
 
-        backends = [
-            ("ForwardDiff", AutoForwardDiff()),
-            ("ReverseDiff", AutoReverseDiff()),
-            ("Mooncake", AutoMooncake(; config = nothing)),
-            ("Zygote", AutoZygote()),            # ("Enzyme", AutoEnzyme()),
-        ]
-
-        for (name, backend) in backends
-            @testset "$name" begin
-                try
-                    g = gradient(f, backend, p)
-                    @test g ≈ expected_grad atol = 1.0e-5
-                catch e
-                    @test_broken false
-                    @warn "AD backend $name failed on $(d) — this is logged as broken, not a hard failure" exception = (
-                        e, catch_backtrace(),
-                    )
-                end
-            end
-        end
-    end
+    # Define the function to compute logpdf for differentiation
+    logpdf_dist(p, dist, x) = logpdf(dist(p...), x)
 end
