@@ -86,6 +86,13 @@ end
     @test s isa Float32
     @test s == floor(s)
 
+    # Very large λ — e.g. log-intensity model where λ = exp(50)
+    # Would trigger InexactError if Int types lurk in the sampler
+    d_huge = PoissonF32(exp(50.0f0))
+    s = rand(rng, d_huge)
+    @test s isa Float32
+    @test s == floor(s)
+
     # Sample mean convergence
     rng2 = Random.MersenneTwister(123)
     d = PoissonF32(5.0f0)

@@ -62,13 +62,13 @@ end
 # CDF via the regularized upper incomplete gamma function:
 #   P(X ≤ k) = Q(k+1, λ) where (P,Q) = gamma_inc(a, x)
 function Distributions.cdf(d::PoissonF32, x::Real)
-    k = floor(x)
+    k = floor(Float32, x)
     _, Q = gamma_inc(max(k, zero(k)) + one(k), d.λ)
     return ifelse(k < 0, zero(d.λ), Q)
 end
 
 function Distributions.ccdf(d::PoissonF32, x::Real)
-    k = floor(x)
+    k = floor(Float32, x)
     P, _ = gamma_inc(max(k, zero(k)) + one(k), d.λ)
     return ifelse(k < 0, one(d.λ), P)
 end
@@ -94,7 +94,7 @@ function _pois_count_rand(rng::AbstractRNG, λ::Float32)
 end
 
 # Procedure F (Float32 version)
-function _pois_procf(λ::Float32, K::Int, s::Float32)
+function _pois_procf(λ::Float32, K::Float32, s::Float32)
     ω = _INV_SQRT_2PI_F32 / s
     b1 = inv(24.0f0 * λ)
     b2 = 0.3f0 * b1 * b1
@@ -105,15 +105,15 @@ function _pois_procf(λ::Float32, K::Int, s::Float32)
 
     if K < 10
         px = -λ
-        py = λ^K / Float32(factorial(K))
+        py = λ^K / Float32(factorial(Int(K)))
     else
-        δ = inv(12.0f0 * Float32(K))
+        δ = inv(12.0f0 * K)
         δ -= 4.8f0 * δ^3
-        V = (λ - Float32(K)) / Float32(K)
-        px = Float32(K) * log1pmx(V) - δ
-        py = _INV_SQRT_2PI_F32 / sqrt(Float32(K))
+        V = (λ - K) / K
+        px = K * log1pmx(V) - δ
+        py = _INV_SQRT_2PI_F32 / sqrt(K)
     end
-    X = (Float32(K) - λ + 0.5f0) / s
+    X = (K - λ + 0.5f0) / s
     X2 = X^2
     fx = X2 / -2.0f0
     fy = ω * (((c3 * X2 + c2) * X2 + c1) * X2 + c0)
@@ -124,20 +124,20 @@ end
 function _pois_ad_rand(rng::AbstractRNG, λ::Float32)
     s = sqrt(λ)
     d = 6.0f0 * λ^2
-    L = floor(Int, λ - 1.1484f0)
+    L = floor(Float32, λ - 1.1484f0)
     # Step N
     G = λ + s * randn(rng, Float32)
 
     if G >= 0.0f0
-        K = floor(Int, G)
+        K = floor(Float32, G)
         # Step I
         if K >= L
-            return Float32(K)
+            return K
         end
 
         # Step S
         U = rand(rng, Float32)
-        if d * U >= (λ - Float32(K))^3
+        if d * U >= (λ - K)^3
             return Float32(K)
         end
 
@@ -159,7 +159,7 @@ function _pois_ad_rand(rng::AbstractRNG, λ::Float32)
             continue
         end
 
-        K = floor(Int, λ + s * T)
+        K = floor(Float32, λ + s * T)
         px, py, fx, fy = _pois_procf(λ, K, s)
         c = 0.1069f0 / λ
 
