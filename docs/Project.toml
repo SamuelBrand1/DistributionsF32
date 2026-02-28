@@ -1,0 +1,5 @@
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+DistributionsF32 = "11f614af-4a9d-4a5e-b76a-60ba70088fe6"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Turing = "fce5fe82-541a-59a6-adf8-730c64b5f9a0"
