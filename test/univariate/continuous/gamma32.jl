@@ -20,7 +20,6 @@
     # but Float32 inputs stay Float32
     d = GammaF32(Float32(2), Float32(3))
     @test partype(d) === Float32
-
 end
 
 @testitem "GammaF32 no type promotion — params and statistics" begin
