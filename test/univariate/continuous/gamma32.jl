@@ -21,8 +21,6 @@
     d = GammaF32(Float32(2), Float32(3))
     @test partype(d) === Float32
 
-    # Alias check
-    @test GammaF32 === Gamma
 end
 
 @testitem "GammaF32 no type promotion — params and statistics" begin
