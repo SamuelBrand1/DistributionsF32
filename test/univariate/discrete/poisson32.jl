@@ -102,8 +102,7 @@ end
     @test abs(sum(samples) / length(samples) - 5.0f0) < 0.1f0
 end
 
-@testitem "PoissonF32 AD: multi-backend gradient of logpdf w.r.t. rate" setup =
-    [DiffBackends] begin
+@testitem "PoissonF32 AD: multi-backend gradient of logpdf w.r.t. rate" setup = [DiffBackends] begin
     # For Poisson(λ), logpdf(k, λ) = k*log(λ) - λ - loggamma(k+1)
     # ∂/∂λ logpdf = k/λ - 1
     # At λ=5, k=3: gradient = 3/5 - 1 = -0.4
@@ -119,7 +118,7 @@ end
             contexts...;
             res1 = g,
             prep_args,
-            name = "logpdf grad PoissonF32 rate",
+            name = "logpdf grad PoissonF32 rate"
         ),
     ]
 

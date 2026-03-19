@@ -113,8 +113,7 @@ end
     @test d4.σ === 2.0f0
 end
 
-@testitem "NormalF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup =
-    [DiffBackends] begin
+@testitem "NormalF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup = [DiffBackends] begin
     # Analytical gradients for N(μ=0, σ=1) at x=1.5:
     #   ∂/∂μ logpdf = (x - μ) / σ² = 1.5
     #   ∂/∂σ logpdf = ((x - μ)² - σ²) / σ³ = (2.25 - 1) / 1 = 1.25
@@ -131,7 +130,7 @@ end
             contexts...;
             res1 = g,
             prep_args,
-            name = "logpdf grad NormalF32 parameters",
+            name = "logpdf grad NormalF32 parameters"
         ),
     ]
 
