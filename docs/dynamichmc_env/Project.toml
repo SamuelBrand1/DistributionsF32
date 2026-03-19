@@ -1,0 +1,12 @@
+[deps]
+Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
+DistributionsF32 = "11f614af-4a9d-4a5e-b76a-60ba70088fe6"
+DynamicHMC = "bbc10e6e-7c05-544b-b16e-64fede858acb"
+ForwardDiff = "f6369f11-7733-5829-9624-2563aa707210"
+LogDensityProblems = "6fdf6af0-433a-55f7-b3ed-c6c6e0b8df7c"
+LogDensityProblemsAD = "996a588d-648d-4e1f-a8f0-a84b347e47b1"
+Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"
+Random = "9a3f8284-a2c9-5f02-9a11-845980a1fd5c"
+SpecialFunctions = "276daf66-3868-5448-9aa4-cd146d93841b"
+Statistics = "10745b16-79ce-11e8-11f9-7d13ad32a3b2"
+TransformVariables = "84d833dd-6860-57f9-a1a7-6da5db126cff"

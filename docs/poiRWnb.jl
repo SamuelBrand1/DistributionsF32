@@ -24,6 +24,9 @@ md"
 # Trying out Poi RW
 "
 
+# ╔═╡ 43b3f00e-4a1c-489d-8315-19593f9f0c40
+
+
 # ╔═╡ de3d02e8-2675-4421-8b98-f756face82aa
 @model function poi_rw(n::Int)
     λ0 ~ Normal(0.0, 10.0)
@@ -39,8 +42,8 @@ end
 
 # ╔═╡ 368e2f95-fe84-44da-b6c0-9c141ff98122
 @model function poi_rw_f32(n::Int)
-    λ0 ~ NormalF32(0.0, 10.0)
-    σ ~ truncated(NormalF32(); lower = 0.0)
+    λ0 ~ NormalF32(0f0, 10f0)
+    σ ~ truncated(NormalF32(); lower = 0f0)
     ϵt ~ filldist(NormalF32(), n)
 
     λt = λ0 .+ σ .* cumsum(ϵt)
@@ -124,6 +127,7 @@ chnf32 = sample(inference_mdlf32, NUTS(), 1000)
 # ╠═544505e8-5c4d-471b-8b8d-809c49255655
 # ╠═0270ebe6-cd56-4f83-a53a-2ad9a62e1644
 # ╠═3f635daf-879f-48e8-94e2-013a4cddcda0
+# ╠═43b3f00e-4a1c-489d-8315-19593f9f0c40
 # ╠═de3d02e8-2675-4421-8b98-f756face82aa
 # ╠═368e2f95-fe84-44da-b6c0-9c141ff98122
 # ╠═a547d972-9f98-497e-9001-680768f9e4e7

@@ -1,27 +1,21 @@
-@testitem "ContinuousFloat32 Tests" begin
+@testitem "ContinuousFloat32 type aliases" begin
     using Distributions
-    # Test the eltype function
-    struct TestDistribution <:
-        Distributions.Sampleable{Distributions.Univariate, ContinuousFloat32} end
-    @test eltype(TestDistribution) == Float32
+    # The type aliases should map to the standard Distributions.jl types
+    @test ContinuousFloat32UnivariateDistribution === Distributions.ContinuousUnivariateDistribution
+    @test ContinuousFloat32MultivariateDistribution === Distributions.ContinuousMultivariateDistribution
 
-    # Test the type aliases
-    @test ContinuousFloat32UnivariateDistribution ==
-        Distributions.Distribution{Distributions.Univariate, ContinuousFloat32}
-    @test ContinuousFloat32MultivariateDistribution ==
-        Distributions.Distribution{Distributions.Multivariate, ContinuousFloat32}
+    # NormalF32 should be a ContinuousUnivariateDistribution
+    @test NormalF32 <: Distributions.ContinuousUnivariateDistribution
+    @test eltype(NormalF32) === Float32
 end
 
-@testitem "DiscreteFloat32 Tests" begin
+@testitem "DiscreteFloat32 type aliases" begin
     using Distributions
-    # Test the eltype function
-    struct TestDiscreteDistribution <:
-        Distributions.Sampleable{Distributions.Univariate, DiscreteFloat32} end
-    @test eltype(TestDiscreteDistribution) == Float32
+    # The type aliases should map to the standard Distributions.jl types
+    @test DiscreteFloat32UnivariateDistribution === Distributions.DiscreteUnivariateDistribution
+    @test DiscreteFloat32MultivariateDistribution === Distributions.DiscreteMultivariateDistribution
 
-    # Test the type aliases
-    @test DiscreteFloat32UnivariateDistribution ==
-        Distributions.Distribution{Distributions.Univariate, DiscreteFloat32}
-    @test DiscreteFloat32MultivariateDistribution ==
-        Distributions.Distribution{Distributions.Multivariate, DiscreteFloat32}
+    # PoissonF32 should be a DiscreteUnivariateDistribution
+    @test PoissonF32 <: Distributions.DiscreteUnivariateDistribution
+    @test eltype(PoissonF32) === Float32
 end

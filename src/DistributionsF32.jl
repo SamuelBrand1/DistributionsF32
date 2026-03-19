@@ -8,11 +8,9 @@ using SpecialFunctions: erfc, loggamma, gamma_inc
 
 include("disttypes.jl")
 
-# export types
-export ContinuousFloat32,
-    ContinuousFloat32UnivariateDistribution, ContinuousFloat32MultivariateDistribution
-export DiscreteFloat32,
-    DiscreteFloat32UnivariateDistribution, DiscreteFloat32MultivariateDistribution
+# export type aliases
+export ContinuousFloat32UnivariateDistribution, ContinuousFloat32MultivariateDistribution
+export DiscreteFloat32UnivariateDistribution, DiscreteFloat32MultivariateDistribution
 
 # Float32 constants
 const log2π_f32 = Float32(log(2π))
