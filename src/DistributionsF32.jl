@@ -21,6 +21,9 @@ const log2π_f32 = Float32(log(2π))
 include("univariate/continuous/normal32.jl")
 export NormalF32, GaussianF32
 
+include("univariate/continuous/gamma32.jl")
+export GammaF32
+
 # Univariate discrete distributions
 include("univariate/discrete/poisson32.jl")
 export PoissonF32

@@ -58,7 +58,6 @@ function Distributions.logpdf(d::PoissonF32{T}, x) where {T <: Real}
     return xlogy(x, d.λ) - d.λ - loggamma(x + one(T))
 end
 
-
 # CDF via the regularized upper incomplete gamma function:
 #   P(X ≤ k) = Q(k+1, λ) where (P,Q) = gamma_inc(a, x)
 function Distributions.cdf(d::PoissonF32, x::Real)
