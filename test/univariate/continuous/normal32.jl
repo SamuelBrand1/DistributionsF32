@@ -113,6 +113,40 @@ end
     @test d4.σ === 2.0f0
 end
 
+@testitem "NormalF32 no Float64 promotion — IR check" setup = [F32PromotionChecks] begin
+    using Distributions, Random
+
+    d = NormalF32(1.0f0, 2.0f0)
+    rng = Random.default_rng()
+
+    results = check_and_report("NormalF32", [
+        ("logpdf",  logpdf, (typeof(d), Float32)),
+        ("pdf",     pdf,    (typeof(d), Float32)),
+        ("cdf",     cdf,    (typeof(d), Float32)),
+        ("rand",    rand,   (typeof(rng), typeof(d))),
+    ])
+
+    for (label, promotes, _) in results
+        @test !promotes
+    end
+end
+
+@testitem "NormalF32 no Float64 promotion — gradient IR" setup = [F32PromotionChecks] begin
+    using Distributions
+
+    f_logpdf = p -> logpdf(NormalF32(p[1], p[2]), 1.5f0)
+    f_cdf = p -> cdf(NormalF32(p[1], p[2]), 1.5f0)
+
+    results = check_and_report("NormalF32 ∇(ForwardDiff)", [
+        ("∇logpdf", f_logpdf, (Vector{ForwardDiff.Dual{ForwardDiff.Tag{typeof(f_logpdf), Float32}, Float32, 2}},)),
+        ("∇cdf",    f_cdf,    (Vector{ForwardDiff.Dual{ForwardDiff.Tag{typeof(f_cdf), Float32}, Float32, 2}},)),
+    ])
+
+    for (label, promotes, _) in results
+        @test !promotes
+    end
+end
+
 @testitem "NormalF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup = [DiffBackends] begin
     # Analytical gradients for N(μ=0, σ=1) at x=1.5:
     #   ∂/∂μ logpdf = (x - μ) / σ² = 1.5

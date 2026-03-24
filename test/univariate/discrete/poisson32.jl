@@ -102,6 +102,37 @@ end
     @test abs(sum(samples) / length(samples) - 5.0f0) < 0.1f0
 end
 
+@testitem "PoissonF32 no Float64 promotion — IR check" setup = [F32PromotionChecks] begin
+    using Distributions, Random
+
+    d = PoissonF32(5.0f0)
+    rng = Random.default_rng()
+
+    results = check_and_report("PoissonF32", [
+        ("logpdf",  logpdf, (typeof(d), Float32)),
+        ("cdf",     cdf,    (typeof(d), Float32)),
+        ("rand",    rand,   (typeof(rng), typeof(d))),
+    ])
+
+    @test !results[1][2]  # logpdf clean
+    @test_broken !results[2][2]  # cdf: gamma_inc promotes (SpecialFunctions.jl)
+    @test !results[3][2]  # rand clean
+end
+
+@testitem "PoissonF32 no Float64 promotion — gradient IR" setup = [F32PromotionChecks] begin
+    using Distributions
+
+    f_logpdf = p -> logpdf(PoissonF32(p[1]), 3.0f0)
+
+    results = check_and_report("PoissonF32 ∇(ForwardDiff)", [
+        ("∇logpdf", f_logpdf, (Vector{ForwardDiff.Dual{ForwardDiff.Tag{typeof(f_logpdf), Float32}, Float32, 1}},)),
+    ])
+
+    for (label, promotes, _) in results
+        @test !promotes
+    end
+end
+
 @testitem "PoissonF32 AD: multi-backend gradient of logpdf w.r.t. rate" setup = [DiffBackends] begin
     # For Poisson(λ), logpdf(k, λ) = k*log(λ) - λ - loggamma(k+1)
     # ∂/∂λ logpdf = k/λ - 1

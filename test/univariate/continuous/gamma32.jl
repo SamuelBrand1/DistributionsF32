@@ -103,6 +103,42 @@ end
     @test rand(rng, d_large) isa Float32
 end
 
+@testitem "GammaF32 Float64 promotion — IR check" setup = [F32PromotionChecks] begin
+    using Distributions, Random
+
+    # GammaF32 delegates to Distributions.Gamma{Float32}.
+    # This report documents which upstream functions promote to Float64.
+
+    d = GammaF32(2.0f0, 3.0f0)
+    rng = Random.default_rng()
+
+    results = check_and_report("GammaF32 (upstream Gamma{Float32})", [
+        ("logpdf",  logpdf, (typeof(d), Float32)),
+        ("pdf",     pdf,    (typeof(d), Float32)),
+        ("cdf",     cdf,    (typeof(d), Float32)),
+        ("rand",    rand,   (typeof(rng), typeof(d))),
+    ])
+
+    @test !results[1][2]  # logpdf clean
+    @test !results[2][2]  # pdf clean
+    @test_broken !results[3][2]  # cdf promotes (upstream)
+    @test_broken !results[4][2]  # rand promotes (upstream)
+end
+
+@testitem "GammaF32 Float64 promotion — gradient IR" setup = [F32PromotionChecks] begin
+    using Distributions
+
+    f_logpdf = p -> logpdf(GammaF32(p[1], p[2]), 1.5f0)
+
+    results = check_and_report("GammaF32 ∇(ForwardDiff)", [
+        ("∇logpdf", f_logpdf, (Vector{ForwardDiff.Dual{ForwardDiff.Tag{typeof(f_logpdf), Float32}, Float32, 2}},)),
+    ])
+
+    for (label, promotes, _) in results
+        @test !promotes
+    end
+end
+
 @testitem "GammaF32 AD: multi-backend gradient of logpdf w.r.t. parameters" setup = [DiffBackends] begin
     # Analytical gradients for Gamma(α=2, θ=1) at x=1.5:
     #   logpdf = (α-1)*log(x) - x/θ - α*log(θ) - loggamma(α)
